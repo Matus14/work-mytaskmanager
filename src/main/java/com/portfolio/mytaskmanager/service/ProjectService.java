@@ -15,6 +15,7 @@ public class ProjectService {
     @Autowired
     private ProjectRepo projectRepo;
 
+    // Optional: works with cases where ID is not found, and instead breaking down program, it throws exception later in another block of code.
     public List<Project> getAllProjects() {
         return projectRepo.findAll();
     }
@@ -26,6 +27,13 @@ public class ProjectService {
     public Project createProject(Project project) {
         return projectRepo.save(project);
     }
+
+    /*  This method updates an existing project in a database. At first calling method .findById() to make sure that
+        data is there. If the data is found, the next block (.map) of the code kick off to update each collum.
+        At the end after updates, the new data is again stored via .save() function.
+        If there is a problem, the orElseThrow() is initialized.
+     */
+
 
     public Project updateProject(Long id, Project updateProject) {
         return projectRepo.findById(id)
