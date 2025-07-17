@@ -1,6 +1,7 @@
 package com.portfolio.mytaskmanager.service;
 
 
+import com.portfolio.mytaskmanager.entity.Project;
 import com.portfolio.mytaskmanager.entity.Task;
 import com.portfolio.mytaskmanager.repository.TaskRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,4 +52,9 @@ public class TaskService {
     public void deleteTask(Long id) {
         taskRepo.deleteById(id);
     }
+
+    public List<Task> getTasksByProject(Project project) {
+        return taskRepo.findByProject(project);
+    }
+
 }
