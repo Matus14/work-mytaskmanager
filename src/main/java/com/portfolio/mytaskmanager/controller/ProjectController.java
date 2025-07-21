@@ -19,7 +19,7 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
-    // GET all projects from databasegit
+    // GET all projects from database
     @GetMapping
     public List<Project> getAllProjects() {
         return projectService.getAllProjects();
