@@ -19,7 +19,7 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
-    // GET all projects from database
+    // GET all projects from databasegit
     @GetMapping
     public List<Project> getAllProjects() {
         return projectService.getAllProjects();
@@ -50,7 +50,7 @@ public class ProjectController {
     }
 
     // DELETE project by ID
-    @GetMapping("/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
         projectService.deleteProject(id);
         return ResponseEntity.noContent().build();
