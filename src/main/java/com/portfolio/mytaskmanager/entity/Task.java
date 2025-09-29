@@ -2,12 +2,18 @@ package com.portfolio.mytaskmanager.entity;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Entity
 @Data // Annotation automatically works with getters/setters/toString.... - Lombok dependency
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Task {
 
     // This generates primary key for each object in my SQL database >project1_taskmanager<
@@ -15,8 +21,10 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 100, nullable = false)
     private String title;
 
+    @Column(length = 1000, nullable = false)
     private String description;
 
     // Saves the enum as a string text("TODO")
@@ -31,7 +39,7 @@ public class Task {
         at last there is a reference variable we need to make to mark connection with entity
     */
     @ManyToOne
-    @JoinColumn(name = "project_id")
+    @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
 }

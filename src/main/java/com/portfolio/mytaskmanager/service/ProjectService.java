@@ -1,53 +1,92 @@
 package com.portfolio.mytaskmanager.service;
 
 
+import com.portfolio.mytaskmanager.dto.ProjectRequestDTO;
+import com.portfolio.mytaskmanager.dto.ProjectResponseDTO;
 import com.portfolio.mytaskmanager.entity.Project;
-import com.portfolio.mytaskmanager.repository.ProjectRepo;
+import com.portfolio.mytaskmanager.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProjectService {
 
     @Autowired
-    private ProjectRepo projectRepo;
+    private ProjectRepository repository;
 
-    // Optional: works with cases where ID is not found, and instead breaking down program, it throws exception later in another block of code.
-    public List<Project> getAllProjects() {
-        return projectRepo.findAll();
+    public ProjectResponseDTO create(ProjectRequestDTO request){
+        validate(request);
+
+        if(repository.existsByNameIgnoreCase(request.getName().trim())){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Project name already exists");
+        }
+
+        Project entity = Project.builder()
+                .name(request.getName().trim())
+                .description(request.getDescription())
+                .startDate(request.getStartDate())
+                .endDate(request.getEndDate())
+                .build();
+
+        Project saved = repository.save(entity);
+        return toDto(saved);
+
     }
 
-    public Optional<Project> getProjectById(Long id) {
-        return projectRepo.findById(id);
+    public List<ProjectResponseDTO> findAll() {
+        return repository.findAll().stream().map(this::toDto).toList();
     }
 
-    public Project createProject(Project project) {
-        return projectRepo.save(project);
+    public ProjectResponseDTO update(Long id, ProjectRequestDTO request){
+        validate(request);
+
+        Project project = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found"));
+
+        project.setName(request.getName().trim());
+        project.setDescription(request.getDescription());
+        project.setStartDate(request.getStartDate());
+        project.setEndDate(request.getEndDate());
+
+        Project saved = repository.save(project);
+        return  toDto(saved);
     }
 
-    /*  This method updates an existing project in a database. At first calling method .findById() to make sure that
-        data is there. If the data is found, the next block (.map) of the code kick off to update each collum.
-        At the end after updates, the new data is again stored via .save() function.
-        If there is a problem, the orElseThrow() is initialized.
-     */
 
+    public ProjectResponseDTO findById(Long id) {
+        Project project = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Id not found"));
+        return toDto(project);
 
-    public Project updateProject(Long id, Project updateProject) {
-        return projectRepo.findById(id)
-                .map(p -> {
-                    p.setName(updateProject.getName());
-                    p.setDescription(updateProject.getDescription());
-                    p.setStartDate(updateProject.getStartDate());
-                    p.setEndDate(updateProject.getEndDate());
-                    return projectRepo.save(p);
-                })
-                .orElseThrow(() -> new RuntimeException("Project not found with id: " + id));
     }
 
-    public void deleteProject(Long id) {
-        projectRepo.deleteById(id);
+    public void delete(Long id) {
+        if(!repository.existsById(id)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Not found for delete");
+        }
+        repository.deleteById(id);
+    }
+
+    private void validate(ProjectRequestDTO p){
+        if(p.getName() == null || p.getName().trim().isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name must be filled in");
+        }
+        if (p.getStartDate() != null && p.getEndDate() != null && !p.getEndDate().isAfter(p.getStartDate())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "endDate must be after startDate");
+        }
+    }
+
+    private ProjectResponseDTO toDto(Project p){
+        return new ProjectResponseDTO(
+                p.getId(),
+                p.getName(),
+                p.getDescription(),
+                p.getStartDate(),
+                p.getEndDate()
+        );
     }
 }

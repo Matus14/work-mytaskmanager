@@ -2,13 +2,19 @@ package com.portfolio.mytaskmanager.entity;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Data // annotation automatically works with getters/setters/toString.... - Lombok dependency
+@Data
 public class Project {
 
     // this generates primary key for each object in my SQL database >project1_taskmanager<

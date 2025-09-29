@@ -10,7 +10,7 @@ import java.util.List;
 
 // JPA repository with selected attribute for ID - Long
 @Repository
-public interface TaskRepo extends JpaRepository<Task, Long> {
+public interface TaskRepository extends JpaRepository<Task, Long> {
 
 
     /*  Method name 'findByProject' is automatically parsed by Spring Data JPA

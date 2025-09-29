@@ -1,61 +1,54 @@
 package com.portfolio.mytaskmanager.controller;
 
 
+import com.portfolio.mytaskmanager.dto.TaskRequestDTO;
+import com.portfolio.mytaskmanager.dto.TaskResponseDTO;
 import com.portfolio.mytaskmanager.entity.Task;
 
 import com.portfolio.mytaskmanager.service.ProjectService;
 import com.portfolio.mytaskmanager.service.TaskService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("api/tasks")
+@RequestMapping("/api/tasks")
 @CrossOrigin(origins = "*") // Allow frontend to access from different origin
 public class TaskController {
 
     @Autowired
-    private TaskService taskService;
+    private TaskService service;
 
-    @Autowired
-    private ProjectService projectService;
-
-    // GET all tasks
-    @GetMapping
-    public List<Task> getAllTasks() {
-        return taskService.getAllTasks();
-    }
-
-    // GET all tasks that belong to specific project by project ID
-    @GetMapping("/project/{projectId}")
-    public ResponseEntity<List<Task>> getTasksByProject(@PathVariable Long projectId) {
-        return projectService.getProjectById(projectId)
-                .map(project -> ResponseEntity.ok(taskService.getTasksByProject(project)))
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    // POST a new task to database
     @PostMapping
-    public ResponseEntity<Task> createTask(@RequestBody Task task) {
-        return ResponseEntity.ok(taskService.saveTask(task));
+    @ResponseStatus(HttpStatus.CREATED)
+    public TaskResponseDTO create(@Valid @RequestBody TaskRequestDTO request){
+        return service.create(request);
     }
 
-    // PUT – update existing task by ID
+    @GetMapping
+    public List<TaskResponseDTO> findAll(){
+        return service.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public TaskResponseDTO findById(@PathVariable Long id){
+        return service.findById(id);
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
-        try {
-            return ResponseEntity.ok(taskService.updateTask(id, task));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public TaskResponseDTO update(@PathVariable Long id,
+                                  @Valid @RequestBody TaskRequestDTO request) {
+        return service.update(id,request);
     }
 
-    // DELETE task by ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
-        taskService.deleteTask(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        service.delete(id);
+        return  ResponseEntity.noContent().build();
     }
+
 }

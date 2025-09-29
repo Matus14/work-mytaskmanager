@@ -7,5 +7,6 @@ import org.springframework.stereotype.Repository;
 
 // JPA repository with selected attribute for ID - Long
 @Repository
-public interface ProjectRepo extends JpaRepository<Project, Long> {
+public interface ProjectRepository extends JpaRepository<Project, Long> {
+    boolean existsByNameIgnoreCase(String name);
 }
