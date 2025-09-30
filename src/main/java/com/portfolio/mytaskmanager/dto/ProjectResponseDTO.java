@@ -13,5 +13,5 @@ public class ProjectResponseDTO {
     private String name;
     private String description;
     private LocalDate startDate;
-    private LocalDate endTDate;
+    private LocalDate endDate;
 }
