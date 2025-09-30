@@ -36,6 +36,7 @@ public class TaskService {
                 .description(request.getDescription().trim())
                 .status(request.getStatus())
                 .dueDate(request.getDueDate())
+                .project(project)
                 .build();
 
         Task saved = repository.save(entity);
@@ -48,7 +49,7 @@ public class TaskService {
 
     public TaskResponseDTO findById(Long id) {
         Task task = repository.findById(id)
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Id not found"));
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
         return toDto(task);
     }
 
@@ -74,7 +75,7 @@ public class TaskService {
 
     public void delete(Long id) {
         if(!repository.existsById(id)){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found for delete");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found for delete");
         }
         repository.deleteById(id);
     }

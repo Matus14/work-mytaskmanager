@@ -1,6 +1,6 @@
 ## MyTaskManager – Project & Task Management REST API
 
-A backend REST API built with **Java Spring Boot** to manage projects and their associated tasks.  
+A backend REST API built with Java Spring Boot to manage projects and their associated tasks.
 The application uses a layered architecture, JPA entity relationships, and is version-controlled via GitHub to simulate real-world team collaboration.
 
 ## Technologies Used
@@ -25,6 +25,12 @@ The application uses a layered architecture, JPA entity relationships, and is ve
   - Includes title, description, status, due date
 -  **Status enum**
   - `TODO`, `IN_PROGRESS`, `DONE`, `FAILED`, `DELAYED`
+-  **DTO layer (added)**
+  - Separate *RequestDTO for input and *ResponseDTO for output
+  - Controllers accept Request DTOs and return Response DTOs
+-  **Initial unit tests (added)**
+  - JUnit 5 + Mockito + AssertJ
+  - Happy paths, validation errors, and repository interaction checks
 -  **Git-based development workflow**
   - Feature branches for each component
   - Descriptive commit messages
@@ -60,25 +66,33 @@ The application uses a layered architecture, JPA entity relationships, and is ve
 src/
 └── main/
 ├── java/com/portfolio/mytaskmanager/
-│ ├── controller/
-│ │ ├── ProjectController.java
-│ │ └── TaskController.java
-│ ├── dto/
-│ │ ├── ProjectDTO.java
-│ │ └── TaskDTO.java
-│ ├── entity/
-│ │ ├── Project.java
-│ │ ├── Task.java
-│ │ └── Status.java
-│ ├── repository/
-│ │ ├── ProjectRepo.java
-│ │ └── TaskRepo.java
-│ ├── service/
-│ │ ├── ProjectService.java
-│ │ └── TaskService.java
-│ └── MytaskmanagerApplication.java
+│   ├── controller/
+│   │   ├── ProjectController.java
+│   │   └── TaskController.java
+│   ├── dto/
+│   │   ├── ProjectRequestDTO.java
+│   │   ├── ProjectResponseDTO.java
+│   │   ├── TaskRequestDTO.java
+│   │   └── TaskResponseDTO.java
+│   ├── entity/
+│   │   ├── Project.java
+│   │   ├── Task.java
+│   │   └── Status.java
+│   ├── repository/
+│   │   ├── ProjectRepo.java
+│   │   └── TaskRepository.java
+│   ├── service/
+│   │   ├── ProjectService.java
+│   │   └── TaskService.java
+│   └── MytaskmanagerApplication.java
 └── resources/
-├── application.properties
+└── application.properties
+
+src/
+└── test/
+└── java/com/portfolio/mytaskmanager/service/
+├── ProjectServiceTest.java
+└── TaskServiceTest.java
 
 
 ## Entity Relationships
@@ -96,6 +110,7 @@ Tasks are fetched by project using: List<Task> findByProject(Project project);
 - Versioning with Git: working in feature branches and committing changes
 - Using Spring Boot with JPA and Lombok
 - Backend/frontend integration via CORS
+- Writing initial unit tests for core services
 
 ## AUTHOR ##
 
