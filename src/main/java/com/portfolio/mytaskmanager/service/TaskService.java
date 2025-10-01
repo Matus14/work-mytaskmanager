@@ -100,10 +100,10 @@ public class TaskService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Description cannot be blank");
         }
         if (t.getProjectId() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "projectId is required");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ProjectId is required");
         }
         if (t.getDueDate() != null && t.getDueDate().isBefore(LocalDate.now())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "dueDate cannot be in the past");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "DueDate cannot be in the past");
         }
     }
 }
